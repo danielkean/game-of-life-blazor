@@ -32,9 +32,14 @@
             var savedRows = initialCells.GetLength(0);
             var savedColumns = initialCells.GetLength(1);
 
-            if(savedRows <= 0 || savedColumns <= 0)
+            if(savedRows <= 0)
             {
-                throw new ArgumentOutOfRangeException("One of the dimensions of the saved 2D array is 0 or less");
+                throw new ArgumentOutOfRangeException(nameof(savedRows), savedRows, "The number of rows of the saved 2D array is 0 or less");
+            }
+
+            if(savedColumns <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(savedColumns), savedColumns, "The number of columns of the saved 2D array is 0 or less");
             }
 
             Cells = initialCells;
@@ -55,6 +60,63 @@
             }
 
             Cells[row, column].ToggleState();
+        }
+
+        public void Tick()
+        {
+            for(var row = 0; row < Rows; row++)
+            {
+                for(var column = 0; column < Columns; column++)
+                {
+                    Cell currentCell = Cells[row, column];
+                    List<Cell> currentNeighbours = GetCellNeighbours(row, column);
+                    int aliveCellNeighbours = currentNeighbours.Count(cell => cell.CurrentState == CellState.Alive);
+
+                    if(currentCell.CurrentState == CellState.Alive && (aliveCellNeighbours == 2 || aliveCellNeighbours == 3))
+                    {
+                        currentCell.NextState = CellState.Alive;
+                    }
+                    else if(currentCell.CurrentState == CellState.Dead && aliveCellNeighbours == 3)
+                    {
+                        currentCell.NextState = CellState.Alive;
+                    }
+                    else
+                    {
+                        currentCell.NextState = CellState.Dead;
+                    }
+                }
+            }
+
+            for(var row = 0; row < Rows; row++)
+            {
+                for(var column = 0; column< Columns; column++)
+                {
+                    Cells[row, column].Tick();
+                }
+            }
+        }
+
+        private List<Cell> GetCellNeighbours(int row, int column)
+        {
+            var neighbours = new List<Cell>(8);
+
+            for (var rowOffset = -1; rowOffset <= 1; rowOffset++)
+            {
+                for (var columnOffset = -1; columnOffset <= 1; columnOffset++)
+                {
+                    if (rowOffset == 0 && columnOffset == 0) continue;
+
+                    var neighbourRow = row + rowOffset;
+                    var neighbourColumn = column + columnOffset;
+
+                    if (neighbourRow < 0 || neighbourRow >= Rows) continue;
+                    if (neighbourColumn < 0 || neighbourColumn >= Columns) continue;
+
+                    neighbours.Add(Cells[neighbourRow, neighbourColumn]);
+                }
+            }
+
+            return neighbours;
         }
     }
 }

@@ -5,7 +5,7 @@ namespace GameOfLife.Models
     public class Cell
     {
         public CellState CurrentState { get; private set; } = CellState.Dead;
-        public CellState NextState { get; private set; } = CellState.Dead;
+        public CellState NextState { get; set; } = CellState.Dead;
 
         public Cell(CellState currentState = CellState.Dead)
         {
@@ -30,7 +30,7 @@ namespace GameOfLife.Models
         {
             CellState.Alive => CellState.Dead,
             CellState.Dead => CellState.Alive,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(nameof(CurrentState), CurrentState, "Enum value is not defined")
         };
     }
 }
