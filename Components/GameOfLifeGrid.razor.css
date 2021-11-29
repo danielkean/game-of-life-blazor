@@ -1,0 +1,84 @@
+﻿.grid-container
+{
+    display: inline-block;
+    background-color: black;
+    border: 2px solid black;
+}
+
+.grid
+{
+    display: grid;
+    grid-template-columns: repeat(100, 18px);
+    grid-template-rows: repeat(100, 18px);
+    gap: 2px;
+}
+
+.cell
+{
+    cursor: pointer;
+    background-color: white;
+}
+
+.cell:hover
+{
+    background-color: lightgreen;
+}
+
+.alive
+{
+    background-color: green;
+}
+
+.alive:hover
+{
+    background-color: darkgreen;
+}
+
+.controls
+{
+    display: flex;
+    gap: 10px;
+    padding-bottom: 20px;
+}
+
+.button
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    transition: 0.1s linear all
+}
+
+.stop
+{
+    background-color: red;
+    border: 2px solid darkred;
+}
+
+.stop:hover
+{
+    background-color: lightcoral;
+}
+
+.run
+{
+    background-color: springgreen;
+    border: 2px solid green;
+}
+
+.run:hover
+{
+    background-color: lightgreen;
+}
+
+.tick
+{
+    background-color: darkgrey;
+    border: 2px solid grey;
+}
+
+.tick:hover
+{
+    background-color: lightgrey;
+}

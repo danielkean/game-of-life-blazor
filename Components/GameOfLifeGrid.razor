@@ -1,0 +1,102 @@
+﻿@using GameOfLife.Models
+
+@code
+{
+    [Parameter] public int Rows { get; set; } = 50;
+    [Parameter] public int Columns { get; set; } = 50;
+    [Parameter] public int TargetTickRate { get; set; } = 120;
+
+    private Generation? generation;
+    private bool isRunning = false;
+    private int tickDelay = 0;
+
+    protected override void OnParametersSet()
+    {
+        Initialise();
+    }
+
+    private void Initialise()
+    {
+        generation = new Generation(Rows, Columns);
+        tickDelay = (int)(1000 * (1f / TargetTickRate));
+    }
+
+    public async Task Run()
+    {
+        isRunning = true;
+        while (isRunning)
+        {
+            if (generation == null) continue;
+
+            if (generation.PopulationCount <= 0)
+            {
+                Stop();
+                break;
+            }
+
+            generation.Tick();
+            StateHasChanged();
+            await Task.Delay(tickDelay);
+        }
+    }
+
+    private void Stop()
+    {
+        isRunning = false;
+    }
+
+    private void OnTickClicked()
+    {
+        if (generation != null)
+        {
+            generation.Tick();
+        }
+    }
+
+    private void OnCellClicked(int row, int column)
+    {
+        if (generation != null)
+        {
+            generation.ToggleCell(row, column);
+        }
+    }
+}
+
+@if (generation != null)
+{
+    <p>
+        <strong>Current Generation:</strong> @generation.GenerationCount
+        <strong>Population:</strong> @generation.PopulationCount
+    </p>
+
+    <div class="controls">
+        @if (isRunning)
+        {
+            <button class="button stop" @onclick=@(() => Stop())><span class="oi oi-media-pause"></span></button>
+        }
+        else
+        {
+            <button class="button run" @onclick=@(async () => await Run())><span class="oi oi-media-play"></span></button>
+            <button class="button tick" @onclick=@(() => OnTickClicked())><span class="oi oi-media-skip-forward"></span></button>
+        }
+    </div>
+
+    <div class="grid-container">
+        <div class="grid">
+            @for (int row = 0; row < Rows; row++)
+            {
+                for (int column = 0; column < Columns; column++)
+                {
+                    int currentRow = row;
+                    int currentColumn = column;
+
+                    <div class="cell @(generation.Cells[row, column].CurrentState == CellState.Alive ? "alive" : "")" @onclick="(() => OnCellClicked(currentRow, currentColumn))"></div>
+                }
+            }
+        </div>
+    </div>
+}
+else
+{
+    <p>An error has occured. No generation is loaded.</p>
+}

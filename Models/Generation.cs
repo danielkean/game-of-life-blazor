@@ -3,13 +3,15 @@
     public class Generation
     {
         public Cell[,] Cells { get; }
+        public int GenerationCount { get; private set; }
+        public int PopulationCount { get; private set; }
 
         private int Rows { get; }
         private int Columns { get; }
 
         public Generation(int rows, int columns)
         {
-            if(rows <= 0 || columns <= 0)
+            if (rows <= 0 || columns <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(rows) + " " + nameof(columns), "The rows and columns of the generation cannot be 0 or less");
             }
@@ -18,67 +20,80 @@
             this.Columns = columns;
             Cells = new Cell[rows, columns];
 
-            for(var row = 0; row < rows; row++)
+            for (var row = 0; row < rows; row++)
             {
-                for(var col = 0; col < columns; col++)
+                for (var col = 0; col < columns; col++)
                 {
-                   Cells[row, col] = new Cell();
+                    Cells[row, col] = new Cell();
                 }
             }
         }
 
         public Generation(Cell[,] initialCells)
         {
-            var savedRows = initialCells.GetLength(0);
-            var savedColumns = initialCells.GetLength(1);
+            var savedRowCount = initialCells.GetLength(0);
+            var savedColumnCount = initialCells.GetLength(1);
 
-            if(savedRows <= 0)
+            if (savedRowCount <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(savedRows), savedRows, "The number of rows of the saved 2D array is 0 or less");
+                throw new ArgumentOutOfRangeException(nameof(savedRowCount), savedRowCount, "The number of rows of the saved 2D array is 0 or less");
             }
 
-            if(savedColumns <= 0)
+            if (savedColumnCount <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(savedColumns), savedColumns, "The number of columns of the saved 2D array is 0 or less");
+                throw new ArgumentOutOfRangeException(nameof(savedColumnCount), savedColumnCount, "The number of columns of the saved 2D array is 0 or less");
             }
 
             Cells = initialCells;
-            Rows = savedRows;
-            Columns = savedColumns;
+            Rows = savedRowCount;
+            Columns = savedColumnCount;
         }
 
         public void ToggleCell(int row, int column)
         {
-            if(row <= 0 || row >= Rows)
+            if (row < 0 || row >= Rows)
             {
                 throw new ArgumentOutOfRangeException(nameof(row), row, "Row value is invalid");
             }
 
-            if (column <= 0 || column >= Columns)
+            if (column < 0 || column >= Columns)
             {
                 throw new ArgumentOutOfRangeException(nameof(column), column, "Column value is invalid");
             }
 
-            Cells[row, column].ToggleState();
+            Cell cell = Cells[row, column];
+            cell.ToggleState();
+
+            if (cell.CurrentState == CellState.Alive) PopulationCount++;
+            else if (cell.CurrentState == CellState.Dead) PopulationCount--;
         }
 
         public void Tick()
         {
-            for(var row = 0; row < Rows; row++)
+            PopulationCount = 0;
+
+            for (var row = 0; row < Rows; row++)
             {
-                for(var column = 0; column < Columns; column++)
+                for (var column = 0; column < Columns; column++)
                 {
                     Cell currentCell = Cells[row, column];
                     List<Cell> currentNeighbours = GetCellNeighbours(row, column);
-                    int aliveCellNeighbours = currentNeighbours.Count(cell => cell.CurrentState == CellState.Alive);
 
-                    if(currentCell.CurrentState == CellState.Alive && (aliveCellNeighbours == 2 || aliveCellNeighbours == 3))
+                    int aliveCellNeighbours = 0;
+                    foreach (var cell in currentNeighbours)
                     {
-                        currentCell.NextState = CellState.Alive;
+                        if (cell.CurrentState == CellState.Alive) aliveCellNeighbours++;
                     }
-                    else if(currentCell.CurrentState == CellState.Dead && aliveCellNeighbours == 3)
+
+                    if (currentCell.CurrentState == CellState.Alive && (aliveCellNeighbours == 2 || aliveCellNeighbours == 3))
                     {
                         currentCell.NextState = CellState.Alive;
+                        PopulationCount++;
+                    }
+                    else if (currentCell.CurrentState == CellState.Dead && aliveCellNeighbours == 3)
+                    {
+                        currentCell.NextState = CellState.Alive;
+                        PopulationCount++;
                     }
                     else
                     {
@@ -87,13 +102,15 @@
                 }
             }
 
-            for(var row = 0; row < Rows; row++)
+            for (var row = 0; row < Rows; row++)
             {
-                for(var column = 0; column< Columns; column++)
+                for (var column = 0; column < Columns; column++)
                 {
                     Cells[row, column].Tick();
                 }
             }
+
+            GenerationCount++;
         }
 
         private List<Cell> GetCellNeighbours(int row, int column)
