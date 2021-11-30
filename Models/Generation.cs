@@ -135,5 +135,23 @@
 
             return neighbours;
         }
+
+        public void Reset()
+        {
+            if(PopulationCount > 0)
+            {
+                for (var row = 0; row < Rows; row++)
+                {
+                    for (var column = 0; column < Columns; column++)
+                    {
+                        Cell cell = Cells[row, column];
+                        if (cell.CurrentState == CellState.Alive) cell.ToggleState();
+                    }
+                }
+            }
+
+            GenerationCount = 0;
+            PopulationCount = 0;
+        }
     }
 }

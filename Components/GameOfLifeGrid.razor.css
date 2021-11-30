@@ -3,6 +3,7 @@
     display: inline-block;
     background-color: black;
     border: 2px solid black;
+    margin: 20px 0px;
 }
 
 .grid
@@ -38,7 +39,6 @@
 {
     display: flex;
     gap: 10px;
-    padding-bottom: 20px;
 }
 
 .button
@@ -81,4 +81,15 @@
 .tick:hover
 {
     background-color: lightgrey;
+}
+
+.reset
+{
+    background-color: darkorange;
+    border: 2px solid orangered;
+}
+
+.reset:hover
+{
+    background-color: orange;
 }
