@@ -66,36 +66,42 @@
 
 @if (generation != null)
 {
-    <p>
-        <strong>Current Generation:</strong> @generation.GenerationCount
-        <strong>Population:</strong> @generation.PopulationCount
-    </p>
+    <div class="game-of-life">
+        <h1>Conway's Game of Life</h1>
 
-    <div class="controls">
-        @if (isRunning)
-        {
-            <button class="button stop" @onclick=@(() => Stop())><span class="oi oi-media-pause"></span></button>
-        }
-        else
-        {
-            <button class="button run" @onclick=@(async () => await Run())><span class="oi oi-media-play"></span></button>
-            <button class="button tick" @onclick=@(() => OnTickClicked())><span class="oi oi-media-skip-forward"></span></button>
-            <button class="button reset" @onclick=@(() => Reset())><span class="oi oi-reload"></span></button>
-        }
-    </div>
-
-    <div class="grid-container">
-        <div class="grid">
-            @for (int row = 0; row < Rows; row++)
-            {
-                for (int column = 0; column < Columns; column++)
+        <div class="top-panel">
+            <div class="controls">
+                @if (isRunning)
                 {
-                    int currentRow = row;
-                    int currentColumn = column;
-
-                    <div class="cell @(generation.Cells[row, column].CurrentState == CellState.Alive ? "alive" : "")" @onclick="(() => OnCellClicked(currentRow, currentColumn))"></div>
+                    <button class="button stop" @onclick=@(() => Stop())><span class="oi oi-media-pause"></span></button>
                 }
-            }
+                else
+                {
+                    <button class="button run" @onclick=@(async () => await Run())><span class="oi oi-media-play"></span></button>
+                    <button class="button tick" @onclick=@(() => OnTickClicked())><span class="oi oi-media-skip-forward"></span></button>
+                    <button class="button reset" @onclick=@(() => Reset())><span class="oi oi-reload"></span></button>
+                }
+            </div>
+
+            <div class="text-info">
+                <p><strong>Current Generation:</strong> @generation.GenerationCount</p>
+                <p><strong>Population:</strong> @generation.PopulationCount</p>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <div class="grid">
+                @for (int row = 0; row < Rows; row++)
+                {
+                    for (int column = 0; column < Columns; column++)
+                    {
+                        int currentRow = row;
+                        int currentColumn = column;
+
+                        <div class="cell @(generation.Cells[row, column].CurrentState == CellState.Alive ? "alive" : "")" @onclick="(() => OnCellClicked(currentRow, currentColumn))"></div>
+                    }
+                }
+            </div>
         </div>
     </div>
 }
