@@ -1,0 +1,18 @@
+﻿@code {
+    [Parameter] public string Url { get; set; } = "";
+    [Parameter] public string ImageColor { get; set; } = "black";
+    [Parameter] public RenderFragment ChildContent { get; set; }
+}
+
+@if (Url != String.Empty)
+{
+    <a href=@Url>
+        <div style="color:@ImageColor">
+            @ChildContent
+        </div>
+    </a>
+}
+else
+{
+    @ChildContent
+}

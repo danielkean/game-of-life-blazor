@@ -6,6 +6,12 @@
     gap: 20px;
 }
 
+h1 {
+    margin-bottom: 0px;
+}
+
+/* #region Grid */
+
 .grid-container {
     display: inline-block;
     
@@ -38,11 +44,22 @@
     background-color: darkgreen;
 }
 
+/* #endregion */
+
+.icons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 150px;
+}
+
+/* #region Top Panel */
+
 .top-panel {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 1000px;
+    width: 900px;
     padding: 20px;
     
     background-color: #181818;
@@ -77,6 +94,8 @@
     margin: 0px;
     text-align: right;
 }
+
+/* #endregion */
 
 /* #region Buttons */
 

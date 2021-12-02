@@ -1,4 +1,5 @@
 ﻿@using GameOfLife.Models
+@using GameOfLife.Components.Icons
 
 @code
 {
@@ -45,13 +46,13 @@
         isRunning = false;
     }
 
-    private void OnTickClicked()
+    private void Tick()
     {
         if (generation == null) return;
         generation.Tick();
     }
 
-    private void OnCellClicked(int row, int column)
+    private void ToggleCell(int row, int column)
     {
         if (generation == null) return;
         generation.ToggleCell(row, column);
@@ -69,6 +70,12 @@
     <div class="game-of-life">
         <h1>Conway's Game of Life</h1>
 
+        <div class="icons">
+            <ImageButton Url="https://github.com/danielkean/game-of-life-blazor" ImageColor="#181818"><CodeIcon/></ImageButton>
+            <ImageButton Url="https://en.wikipedia.org/wiki/Conway's_Game_of_Life" ImageColor="#181818"><InfoIcon/></ImageButton>
+            <ImageButton Url="https://danielkean.com" ImageColor="#181818"><UserIcon/></ImageButton>
+        </div>
+
         <div class="top-panel">
             <div class="controls">
                 @if (isRunning)
@@ -78,7 +85,7 @@
                 else
                 {
                     <button class="button run" @onclick=@(async () => await Run())><span class="oi oi-media-play"></span></button>
-                    <button class="button tick" @onclick=@(() => OnTickClicked())><span class="oi oi-media-skip-forward"></span></button>
+                    <button class="button tick" @onclick=@(() => Tick())><span class="oi oi-media-skip-forward"></span></button>
                     <button class="button reset" @onclick=@(() => Reset())><span class="oi oi-reload"></span></button>
                 }
             </div>
@@ -98,7 +105,7 @@
                         int currentRow = row;
                         int currentColumn = column;
 
-                        <div class="cell @(generation.Cells[row, column].CurrentState == CellState.Alive ? "alive" : "")" @onclick="(() => OnCellClicked(currentRow, currentColumn))"></div>
+                        <div class="cell @(generation.Cells[row, column].CurrentState == CellState.Alive ? "alive" : "")" @onclick="(() => ToggleCell(currentRow, currentColumn))"></div>
                     }
                 }
             </div>

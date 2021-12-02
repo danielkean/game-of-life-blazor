@@ -1,0 +1,14 @@
+﻿a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+
+    transition: 0.1s linear all;
+    background-color: #9c9c9c;
+    border-radius: 5px;
+}
+
+a:hover {
+    background-color: #e1e1e1;
+}
