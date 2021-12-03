@@ -1,7 +1,7 @@
 ﻿@code {
     [Parameter] public string Url { get; set; } = "";
     [Parameter] public string ImageColor { get; set; } = "black";
-    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; }
 }
 
 @if (Url != String.Empty)

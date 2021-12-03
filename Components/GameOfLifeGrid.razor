@@ -1,118 +1,57 @@
 ﻿@using GameOfLife.Models
 @using GameOfLife.Components.Icons
 
+@inject GameOfLife.Services.GameOfLifeService GameOfLife
+
 @code
 {
-    [Parameter] public int Rows { get; set; } = 50;
-    [Parameter] public int Columns { get; set; } = 50;
-    [Parameter] public int TargetTickRate { get; set; } = 120;
-
-    private Generation? generation;
-    private bool isRunning = false;
-    private int tickDelay = 0;
-
-    protected override void OnParametersSet()
+    protected override void OnInitialized()
     {
-        Initialise();
-    }
-
-    private void Initialise()
-    {
-        generation = new Generation(Rows, Columns);
-        tickDelay = (int)(1000 * (1f / TargetTickRate));
-    }
-
-    public async Task Run()
-    {
-        isRunning = true;
-        while (isRunning)
-        {
-            if (generation == null) continue;
-
-            if (generation.PopulationCount <= 0)
-            {
-                Stop();
-                break;
-            }
-
-            generation.Tick();
-            StateHasChanged();
-            await Task.Delay(tickDelay);
-        }
-    }
-
-    private void Stop()
-    {
-        isRunning = false;
-    }
-
-    private void Tick()
-    {
-        if (generation == null) return;
-        generation.Tick();
-    }
-
-    private void ToggleCell(int row, int column)
-    {
-        if (generation == null) return;
-        generation.ToggleCell(row, column);
-    }
-
-    private void Reset()
-    {
-        if (generation == null) return;
-        generation.Reset();
+        GameOfLife.OnGenerationTick += StateHasChanged;
     }
 }
 
-@if (generation != null)
-{
-    <div class="game-of-life">
-        <h1>Conway's Game of Life</h1>
+<div class="game-of-life">
+    <h1>Conway's Game of Life</h1>
 
-        <div class="icons">
-            <ImageButton Url="https://github.com/danielkean/game-of-life-blazor" ImageColor="#181818"><CodeIcon/></ImageButton>
-            <ImageButton Url="https://en.wikipedia.org/wiki/Conway's_Game_of_Life" ImageColor="#181818"><InfoIcon/></ImageButton>
-            <ImageButton Url="https://danielkean.com" ImageColor="#181818"><UserIcon/></ImageButton>
+    <div class="icons">
+        <ImageButton Url="https://github.com/danielkean/game-of-life-blazor" ImageColor="#181818"><CodeIcon/></ImageButton>
+        <ImageButton Url="https://en.wikipedia.org/wiki/Conway's_Game_of_Life" ImageColor="#181818"><InfoIcon/></ImageButton>
+        <ImageButton Url="https://danielkean.com" ImageColor="#181818"><UserIcon/></ImageButton>
+    </div>
+
+    <div class="top-panel">
+        <div class="controls">
+            @if (GameOfLife.IsRunning)
+            {
+                <button class="button stop" @onclick=@(() => GameOfLife.Stop())><span class="oi oi-media-pause"></span></button>
+            }
+            else
+            {
+                <button class="button run" @onclick=@(async () => await GameOfLife.Run())><span class="oi oi-media-play"></span></button>
+                <button class="button tick" @onclick=@(() => GameOfLife.Tick())><span class="oi oi-media-skip-forward"></span></button>
+                <button class="button reset" @onclick=@(() => GameOfLife.Reset())><span class="oi oi-reload"></span></button>
+            }
         </div>
 
-        <div class="top-panel">
-            <div class="controls">
-                @if (isRunning)
-                {
-                    <button class="button stop" @onclick=@(() => Stop())><span class="oi oi-media-pause"></span></button>
-                }
-                else
-                {
-                    <button class="button run" @onclick=@(async () => await Run())><span class="oi oi-media-play"></span></button>
-                    <button class="button tick" @onclick=@(() => Tick())><span class="oi oi-media-skip-forward"></span></button>
-                    <button class="button reset" @onclick=@(() => Reset())><span class="oi oi-reload"></span></button>
-                }
-            </div>
-
-            <div class="text-info">
-                <p><strong>Current Generation:</strong> @generation.GenerationCount</p>
-                <p><strong>Population:</strong> @generation.PopulationCount</p>
-            </div>
-        </div>
-
-        <div class="grid-container">
-            <div class="grid">
-                @for (int row = 0; row < Rows; row++)
-                {
-                    for (int column = 0; column < Columns; column++)
-                    {
-                        int currentRow = row;
-                        int currentColumn = column;
-
-                        <div class="cell @(generation.Cells[row, column].CurrentState == CellState.Alive ? "alive" : "")" @onclick="(() => ToggleCell(currentRow, currentColumn))"></div>
-                    }
-                }
-            </div>
+        <div class="text-info">
+            <p><strong>Current Generation:</strong> @GameOfLife.GenerationCount</p>
+            <p><strong>Population:</strong> @GameOfLife.Generation.PopulationCount</p>
         </div>
     </div>
-}
-else
-{
-    <p>An error has occured. No generation is loaded.</p>
-}
+
+    <div class="grid-container">
+        <div class="grid">
+            @for (int row = 0; row < GameOfLife.Rows; row++)
+            {
+                for (int column = 0; column < GameOfLife.Columns; column++)
+                {
+                    int currentRow = row;
+                    int currentColumn = column;
+
+                    <div class="cell @(GameOfLife.Generation.Cells[row, column].CurrentState == CellState.Alive ? "alive" : "")" @onclick="(() => GameOfLife.ToggleCell(currentRow, currentColumn))"></div>
+                }
+            }
+        </div>
+    </div>
+</div>

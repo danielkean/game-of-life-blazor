@@ -3,7 +3,6 @@
     public class Generation
     {
         public Cell[,] Cells { get; }
-        public int GenerationCount { get; private set; }
         public int PopulationCount { get; private set; }
 
         private int Rows { get; }
@@ -109,8 +108,6 @@
                     Cells[row, column].Tick();
                 }
             }
-
-            GenerationCount++;
         }
 
         private List<Cell> GetCellNeighbours(int row, int column)
@@ -150,7 +147,6 @@
                 }
             }
 
-            GenerationCount = 0;
             PopulationCount = 0;
         }
     }
