@@ -11,7 +11,7 @@ public class GameOfLifeService
     public bool IsRunning           { get; private set; } = false;
     public int TargetTickRate       { get; } = 120;
 
-    public event Action? OnGenerationTick;
+    public event Action? OnGameStateUpdate;
 
     private readonly int tickDelay = 0;
 
@@ -45,18 +45,20 @@ public class GameOfLifeService
     public void Tick()
     {
         Generation.Tick();
-        OnGenerationTick?.Invoke();
         GenerationCount++;
+        OnGameStateUpdate?.Invoke();
     }
 
     public void Reset()
     {
         Generation.Reset();
         GenerationCount = 0;
+        OnGameStateUpdate?.Invoke();
     }
 
     public void ToggleCell(int row, int column)
     {
         Generation.ToggleCell(row, column);
+        OnGameStateUpdate?.Invoke();
     }
 }

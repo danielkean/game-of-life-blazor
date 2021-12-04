@@ -1,0 +1,85 @@
+﻿.control-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 900px;
+    padding: 20px;
+    background-color: #181818;
+    border-radius: 5px;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.text-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.text-info p {
+    margin: 0px;
+    text-align: right;
+}
+
+/* #region Buttons */
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+    width: 90px;
+    transition: 0.1s linear all;
+    border-radius: 5px;
+    border: none;
+}
+
+.stop {
+    background-color: red;
+}
+
+.stop:hover {
+    background-color: lightcoral;
+}
+
+.run {
+    background-color: springgreen;
+}
+
+.run:hover {
+    background-color: lightgreen;
+}
+
+.tick {
+    background-color: darkgrey;
+}
+
+.tick:hover {
+    background-color: lightgrey;
+}
+
+.reset {
+    background-color: darkorange;
+}
+
+.reset:hover {
+    background-color: orange;
+}
+
+/* #endregion */
+
+@media screen and (max-width: 1840px) {
+    .control-panel {
+        flex-direction: column;
+        gap: 20px;
+        width: 400px;
+    }
+
+    .text-info p {
+        text-align: center;
+    }
+}

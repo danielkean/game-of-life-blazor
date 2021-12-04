@@ -1,0 +1,29 @@
+﻿@inject GameOfLife.Services.GameOfLifeService GameOfLife
+
+@code
+{
+    protected override void OnInitialized()
+    {
+        GameOfLife.OnGameStateUpdate += StateHasChanged;
+    }
+}
+
+<div class="control-panel">
+    <div class="controls">
+        @if (GameOfLife.IsRunning)
+        {
+            <button class="button stop" @onclick=@(() => GameOfLife.Stop())><span class="oi oi-media-pause"></span></button>
+        }
+        else
+        {
+            <button class="button run" @onclick=@(async () => await GameOfLife.Run())><span class="oi oi-media-play"></span></button>
+            <button class="button tick" @onclick=@(() => GameOfLife.Tick())><span class="oi oi-media-skip-forward"></span></button>
+            <button class="button reset" @onclick=@(() => GameOfLife.Reset())><span class="oi oi-reload"></span></button>
+        }
+    </div>
+
+    <div class="text-info">
+        <p><strong>Current Generation:</strong> @GameOfLife.GenerationCount</p>
+        <p><strong>Population:</strong> @GameOfLife.Generation.PopulationCount</p>
+    </div>
+</div>
