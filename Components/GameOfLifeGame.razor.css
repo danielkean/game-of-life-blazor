@@ -9,3 +9,9 @@
 h1 {
     margin-bottom: 0px;
 }
+
+@media screen and (max-width: 440px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+}

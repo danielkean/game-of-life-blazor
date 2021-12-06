@@ -1,5 +1,7 @@
 ﻿.grid-container {
     display: inline-block;
+    width: 100%;
+
     background-color: #181818;
     border: 5px solid #181818;
     border-radius: 5px;
@@ -7,14 +9,15 @@
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(100, 16px);
-    grid-template-rows: repeat(100, 16px);
-    gap: 2px;
+    grid-template-columns: repeat(100, 100fr);
+    grid-template-rows: repeat(100, 100fr);
+    gap: 1px;
 }
 
 .cell {
     cursor: pointer;
     background-color: white;
+    aspect-ratio: 1;
 }
 
 .cell:hover {

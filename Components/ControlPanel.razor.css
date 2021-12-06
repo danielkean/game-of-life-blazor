@@ -72,7 +72,7 @@
 
 /* #endregion */
 
-@media screen and (max-width: 1840px) {
+@media screen and (max-width: 950px) {
     .control-panel {
         flex-direction: column;
         gap: 20px;

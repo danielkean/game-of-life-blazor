@@ -18,6 +18,8 @@ p {
 }
 
 html, body {
+    height: 100%;
+    background-color: var(--foreground-color);
     font-family: 'Cascadia Mono', Helvetica, Arial, sans-serif;
 }
 
